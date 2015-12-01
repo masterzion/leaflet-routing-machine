@@ -6,9 +6,18 @@ function corslite(url, callback, cors) {
         return callback(Error('Browser not supported'));
     }
 
+	var protocol;
+	if (location.protocol === 'file:') {
+		protocol = 'http:';
+	} else {
+		protocol = location.protocol;
+	}
+	
+	
     if (typeof cors === 'undefined') {
         var m = url.match(/^\s*https?:\/\/[^\/]*/);
-        cors = m && (m[0] !== location.protocol + '//' + location.domain +
+
+        cors = m && (m[0] !== protocol + '//' + location.domain +
                 (location.port ? ':' + location.port : ''));
     }
 
@@ -82,7 +91,7 @@ function corslite(url, callback, cors) {
 
     // GET is the only supported HTTP Verb by XDomainRequest and is the
     // only one supported here.
-    x.open('GET', url, true);
+    x.open('GET', protocol+url, true);
 
     // Send the request. Sending data is not supported.
     x.send(null);
